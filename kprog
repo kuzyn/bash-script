@@ -1,0 +1,55 @@
+#!/bin/bash
+#Info: Script pour terminer un programme qui déconne, à utiliser avec "sudo"
+#Date: mars 2010
+#
+#
+
+
+## Prends "l'imput" de l'utilisateur et trouve les programmes correspondants.
+
+let demande=0 #variable pour loop "while le nom du programme n'est pas trouvé"
+
+while [ $demande -eq 0 ]; # -eq	== equal
+do
+	#demande le nom du programme
+	echo "Quel est le nom du programme à terminer?"
+	read programme
+
+	#s'assure qu'il trouve le programme dans les processus en marche
+	if [ "`ps -e|awk '{ print $1 " "$4 }'|grep $programme |awk '{ print $2 }'|head -n 1`" == "" ];
+		then
+		echo "Nom invalide/introuvable. Réessayer."
+		
+
+	#confirme le nom du/des programmes
+
+	else
+	clear
+	echo -e "Ces processus seront donc fermés :\\n`ps -e|awk '{ print $1 " "$4 }'|grep $programme |awk '{ print $1 " " $2 }'`"
+	
+	#termine le loop
+	let demande=1
+	fi
+
+done
+
+
+#deuxième loop : compte jusqu'à 5 avant de terminer le programme
+echo -e "\\nAppuyer sur *CTRL+C* pour annuler."
+
+let x=5 #variable du loop
+
+while [ $x -gt 0 ]; # -gt == greater than
+do
+	#countdown
+	echo -e "\\n $x"
+	let x-=1 # "a-=b" == soustrait "b" de la variable "a" 
+	sleep 1
+	
+
+#tue toutes les instances du programme
+if [ $x == 0 ];
+	then
+	kill -9 `ps -e|awk '{ print $1 " "$4 }'|grep $programme |awk '{ print $1 }'` # avec awk, $x = les "rows" séparés par un espace 
+fi
+done

@@ -1,0 +1,21 @@
+#! /bin/bash
+# 
+# "Darkly" - v0.1 - 2010-07-30
+# Script de capture webcam
+# À inclure en cron.tab pour une rotation continue, le nombre d'heure requis 
+#
+# Basé sur différent script de danpaluska (http://gist.github.com/danpaluska)
+# 
+
+#Variables
+#DATEH : pour avoir des noms de fichiers avec l'heure d'initialisation du script
+HEURE=`date +%H%M%S`
+
+#Navigue jusqu'à "~/Darkly" et créé un repertoire avec la date yyyy-mm-dd 
+ 
+cd /home/fatherfucker/Darkly
+mkdir `date +%F-%Hheure`
+cd `date +%F-%Hheure`
+
+#On demande au streamer d'enregistrer 1 frame 360 fois a 0.1 fps
+streamer -t 360 -r0.1 -o darkly$HEURE.jpeg
